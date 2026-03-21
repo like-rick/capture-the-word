@@ -5,8 +5,6 @@ import { userPrompt } from './prompt.js'
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 
-console.log("当前工作目录:", process.cwd());
-console.log("API Key 变量内容:", process.env.GEMINI_API_KEY);
 const API_KEY = process.env.GEMINI_API_KEY;
 const MODEL = "gemini-2.5-flash-lite"; // 使用稳定版模型
 const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;

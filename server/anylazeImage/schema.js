@@ -11,11 +11,11 @@ const responseSchema = z.object({
   example_sentence: z.string().describe("包含代表单词的简单例句"),
   
   // 以 Look at 开头，每句后带换行符的解释
-  explaination: z.string()
+  explanation: z.string()
     .describe("以Look at开头，每句后带换行符的解释"),
     
   // 针对解释给出的两条互动回复
-  explaination_replys: z.array(z.string())
+  explanation_replys: z.array(z.string())
     .length(2, "必须提供两条互动回复") // 显式约束数组长度为 2
     .describe("针对解释给出的两条互动回复"),
 });

@@ -8,7 +8,7 @@ const sentence = ref('');
 
 const detailExpand = ref(false);
 
-const explainations = ref([]);
+const explanation = ref([]);
 const expReply = ref([]);
 
 const update = async (imageData: string) => {
@@ -32,8 +32,8 @@ const update = async (imageData: string) => {
   const replyData = JSON.parse(data.text);
   word.value = replyData.representative_word;
   sentence.value = replyData.example_sentence;
-  explainations.value = replyData.explaination.split('\n').filter((item: any) => item!== '');
-  expReply.value = replyData.explaination_replys;
+  explanation.value = replyData.explanation.split('\n').filter((item: any) => item!== '');
+  expReply.value = replyData.explanation_replys;
 };
 
 const submit = async (imageData: string) => {
@@ -50,7 +50,7 @@ const submit = async (imageData: string) => {
         <button @click="detailExpand = !detailExpand">Talk about it</button>
         <div v-if="!detailExpand" class="fold"></div>
         <div v-else class="expand">
-          <div class="explaination" v-for="item in explainations">
+          <div class="explanation" v-for="item in explanation">
             <p>{{ item }}</p>
           </div>
           <div class="reply" v-for="item in expReply">
@@ -138,11 +138,11 @@ button {
   margin-top: 20px;
   border-radius: 6px;
 }
-.expand .explaination {
+.expand .explanation {
   color: black;
   font-weight: normal;
 }
-.expand .explaination p {
+.expand .explanation {
   margin: 0 10px 10px 10px;
 }
 .expand .reply {
