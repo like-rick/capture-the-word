@@ -45,7 +45,7 @@ const updateImageData = async (e: Event): Promise<any> => {
     <input id="selecteImage" class="input" type="file" accept=".jpg, .jpeg, .png, .gif" @change="updateImageData" />
     <img v-if="imgUrl" :src="imgUrl"/>
     <label for="selecteImage" class="upload">{{imgUrl ? "点击更换图片" : "点击上传图片"}}</label>
-    <div class="word">{{ props.word }}</div>
+    <div class="word" v-if="word">{{ props.word }}</div>
   </div>
 </template>
 
@@ -57,14 +57,16 @@ const updateImageData = async (e: Event): Promise<any> => {
   border-radius: 8px;
   padding: 20px;
   margin-top: 40px;
-  height: 280px;
+  min-height: 280px;
+  height: auto;
+  min-width: 280px;
   box-shadow: rgb(63,38,21) 0 3px 0px 0;
   background-color: rgb(105,78,62);
   box-sizing: border-box;
 }
 .upload {
-  width: 160px;
-  height: 160px;
+  width: 100%;
+  height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;

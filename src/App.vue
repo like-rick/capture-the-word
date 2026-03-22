@@ -2,9 +2,10 @@
 import { ref } from 'vue';
 import PictureCard from './components/PictureCard.vue';
 
-const word = ref('请上传图片');
+const word = ref('');
 const audio = ref('');
 const sentence = ref('');
+const audioUrl = ref('');
 
 const detailExpand = ref(false);
 
@@ -39,6 +40,49 @@ const update = async (imageData: string) => {
 const submit = async (imageData: string) => {
   update(imageData);
 };
+
+
+const playCaptureAudio = async (text: string, prompt = "温柔女声") => {
+    try {
+        // 1. 发起 POST 请求
+        const response = await fetch('http://localhost:3000/generateAudio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            // 将参数放在 body 中
+            body: JSON.stringify({ text, prompt }),
+        });
+
+        // 2. 检查响应状态
+        if (!response.ok) {
+            // 如果后端返回的是 JSON 错误信息，需要特殊处理读取
+            const errorData = await response.json();
+            throw new Error(errorData.error || '语音合成失败');
+        }
+
+        // 3. 关键：将响应流转换为 Blob (Binary Large Object)
+        // 这一步对应后端发送的 'audio/mpeg'
+        const audioBlob = await response.blob();
+
+        // 4. 创建一个指向内存中该 Blob 的临时 URL (Object URL)
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        // 5. 使用原生 Audio 对象播放
+        const audio = new Audio(audioUrl);
+        
+        // 性能优化：播放结束后立即释放内存，防止大量单词查询导致内存溢出
+        audio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            console.log('音频播放完毕，内存已释放');
+        };
+
+        await audio.play();
+
+    } catch (error: any) {
+        console.error('音频处理出错:', error.message);
+    }
+};
 </script>
 
 <template>
@@ -46,6 +90,7 @@ const submit = async (imageData: string) => {
     <PictureCard @update-image="submit" :word="word"/>
     <div class="output">
       <div>{{ sentence }}</div>
+      <button v-if="sentence" @click="playCaptureAudio(sentence)">🔊</button>
       <div class="details">
         <button @click="detailExpand = !detailExpand">Talk about it</button>
         <div v-if="!detailExpand" class="fold"></div>
